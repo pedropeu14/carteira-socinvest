@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Socinvest N3 — Portfolio</title>
+<style>
+  :root {
+    --bg: #0b0f17;
+    --surface: #121826;
+    --surface2: #1a2234;
+    --border: #232d42;
+    --ink: #e8edf6;
+    --ink2: #9aa3b5;
+    --ink3: #667089;
+    --accent: #4f8cff;
+    --up: #34d399;
+    --down: #f87171;
+    --warn: #e0a63a;
+    --c-equities: #4f8cff;
+    --c-bonds: #23a87c;
+    --c-gold: #c2851c;
+    --c-cash: #9678f0;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font: 14px/1.45 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding: 24px clamp(12px, 4vw, 40px) 60px;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px; margin-bottom: 18px; }
+  header h1 { font-size: 20px; font-weight: 650; letter-spacing: .2px; }
+  header .sub { color: var(--ink2); font-size: 13px; }
+  header .stamp { margin-left: auto; color: var(--ink3); font-size: 12px; }
+  header .stamp .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--up); margin-right: 5px; }
+  header .stamp .dot.stale { background: var(--warn); }
+
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 18px; }
+  .tile { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .tile .k { color: var(--ink2); font-size: 12px; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 6px; }
+  .tile .v { font-size: 24px; font-weight: 650; font-variant-numeric: tabular-nums; }
+  .tile .d { font-size: 13px; margin-top: 3px; font-variant-numeric: tabular-nums; color: var(--ink2); }
+  .pos { color: var(--up); } .neg { color: var(--down); }
+
+  .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; margin-bottom: 18px; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .card h2 { font-size: 13px; font-weight: 600; color: var(--ink2); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 10px; }
+  .card .note { color: var(--ink3); font-size: 12px; margin-top: 8px; }
+
+  svg text { font: 11px -apple-system, "Segoe UI", Roboto, sans-serif; fill: var(--ink2); }
+  .gridline { stroke: var(--border); stroke-width: 1; }
+  .axisline { stroke: var(--ink3); stroke-width: 1; }
+
+  #tooltip {
+    position: fixed; pointer-events: none; z-index: 10; display: none;
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 10px; font-size: 12px; color: var(--ink);
+    box-shadow: 0 6px 18px rgba(0,0,0,.45); font-variant-numeric: tabular-nums;
+  }
+  #tooltip .t { color: var(--ink2); margin-bottom: 3px; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; font-size: 12px; color: var(--ink2); }
+  .legend .sw { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+
+  table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  th, td { padding: 7px 10px; text-align: right; white-space: nowrap; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th {
+    color: var(--ink2); font-size: 11px; text-transform: uppercase; letter-spacing: .5px;
+    border-bottom: 1px solid var(--border); cursor: pointer; user-select: none; position: sticky; top: 0; background: var(--surface);
+  }
+  thead th:hover { color: var(--ink); }
+  tbody tr { border-bottom: 1px solid rgba(35,45,66,.55); }
+  tbody tr:hover { background: var(--surface2); }
+  td .nm { color: var(--ink); }
+  td .sym { color: var(--ink3); font-size: 12px; margin-left: 6px; }
+  td .cls { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 7px; }
+  td .stale { color: var(--warn); font-size: 11px; margin-left: 5px; }
+  .tablewrap { overflow-x: auto; }
+  tfoot td { font-weight: 650; border-top: 1px solid var(--border); padding-top: 9px; }
+
+  .filters { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+  .filters button {
+    background: var(--surface2); color: var(--ink2); border: 1px solid var(--border);
+    border-radius: 999px; padding: 4px 12px; font-size: 12px; cursor: pointer;
+  }
+  .filters button.on { color: var(--ink); border-color: var(--accent); background: rgba(79,140,255,.12); }
+  footer { color: var(--ink3); font-size: 12px; margin-top: 22px; max-width: 900px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Socinvest N3</h1>
+  <span class="sub">UBS custody · USD · inception 26 May 2026</span>
+  <span class="stamp" id="stamp"></span>
+</header>
+
+<div class="tiles" id="tiles"></div>
+
+<div class="grid">
+  <div class="card">
+    <h2>Portfolio value (USD)</h2>
+    <div id="linechart"></div>
+    <div class="legend" id="linelegend"></div>
+    <div class="note">Line: current holdings marked to Yahoo daily closes + cash. Dots: official UBS statement values (TWR in tooltip). Dashed: initial capital.</div>
+  </div>
+  <div class="card">
+    <h2>Allocation</h2>
+    <div id="donut"></div>
+    <div class="legend" id="donutlegend"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Positions</h2>
+  <div class="filters" id="filters"></div>
+  <div class="tablewrap"><table id="postable">
+    <thead><tr>
+      <th data-k="name">Asset</th>
+      <th data-k="qty">Qty</th>
+      <th data-k="cost">Avg cost</th>
+      <th data-k="last">Last</th>
+      <th data-k="day">Day</th>
+      <th data-k="mv">Value USD</th>
+      <th data-k="w">Weight</th>
+      <th data-k="pnl">P&L USD</th>
+      <th data-k="pnlp">P&L %</th>
+    </tr></thead>
+    <tbody></tbody>
+    <tfoot></tfoot>
+  </table></div>
+  <div class="note" id="tablenote"></div>
+</div>
+
+<footer id="foot"></footer>
+<div id="tooltip"></div>
+
+<script>
+const fmt$ = (v, dec=0) => (v<0?"-":"") + "$" + Math.abs(v).toLocaleString("en-US", {minimumFractionDigits:dec, maximumFractionDigits:dec});
+const fmtN = (v, dec=2) => v.toLocaleString("en-US", {minimumFractionDigits:dec, maximumFractionDigits:dec});
+const fmtP = v => (v>=0?"+":"") + v.toFixed(2) + "%";
+const CLS_COLOR = { Equities: "var(--c-equities)", Bonds: "var(--c-bonds)", Gold: "var(--c-gold)", Cash: "var(--c-cash)" };
+const sgn = v => v>=0 ? "pos" : "neg";
+const tooltip = document.getElementById("tooltip");
+
+function showTip(html, x, y) {
+  tooltip.innerHTML = html; tooltip.style.display = "block";
+  const r = tooltip.getBoundingClientRect();
+  tooltip.style.left = Math.min(x + 14, innerWidth - r.width - 8) + "px";
+  tooltip.style.top = Math.min(y + 14, innerHeight - r.height - 8) + "px";
+}
+function hideTip() { tooltip.style.display = "none"; }
+
+async function main() {
+  const [book, prices] = await Promise.all([
+    fetch("positions.json").then(r => r.json()),
+    fetch("data/prices.json").then(r => r.json()),
+  ]);
+  const meta = book.meta, S = prices.series;
+
+  // ---- master calendar (union of dates >= inception), forward-filled series
+  const dateSet = new Set();
+  for (const sym in S) (S[sym].dates || []).forEach(d => { if (d >= meta.inception_date) dateSet.add(d); });
+  const cal = [...dateSet].sort();
+  const ff = {};   // sym -> array of closes aligned to cal (ffill, then backfill head)
+  for (const sym in S) {
+    const s = S[sym]; if (!s.dates || !s.dates.length) continue;
+    const map = {}; s.dates.forEach((d, i) => map[d] = s.closes[i]);
+    let cur = null; const arr = [];
+    for (const d of cal) { if (map[d] != null) cur = map[d]; arr.push(cur); }
+    let first = s.closes[0];
+    for (let i = 0; i < arr.length; i++) arr[i] = arr[i] == null ? first : arr[i];
+    ff[sym] = arr;
+  }
+  const fx = ff["EURUSD=X"] || cal.map(() => 1);
+  const toUSD = (sym, i, px) => (S[sym] && S[sym].currency === "EUR") ? px * fx[i] : px;
+
+  // ---- per-position current values
+  const iLast = cal.length - 1, iPrev = Math.max(0, cal.length - 2);
+  const rows = [];
+  for (const p of book.positions) {
+    const s = S[p.symbol] || {};
+    const has = ff[p.symbol] != null;
+    const lastRaw = has ? ff[p.symbol][iLast] : p.stmt_price;
+    const last = has ? toUSD(p.symbol, iLast, lastRaw) : p.stmt_price; // stmt_price is USD
+    const mv = p.qty * last;
+    const stale = !has || (s.last_date && (new Date(cal[iLast]) - new Date(s.last_date)) / 864e5 > 4);
+    const n = has ? s.closes.length : 0; // day move from the symbol's own last two closes
+    rows.push({
+      ...p, last, mv,
+      day: n > 1 ? (s.closes[n - 1] / s.closes[n - 2] - 1) * 100 : 0,
+      pnl: mv - p.qty * p.cost_usd,
+      pnlp: (last / p.cost_usd - 1) * 100,
+      stale, last_date: s.last_date || "statement",
+    });
+  }
+  const invested = rows.reduce((a, r) => a + r.mv, 0);
+  const total = invested + meta.cash_usd;
+  rows.forEach(r => r.w = r.mv / total * 100);
+
+  // ---- portfolio daily series
+  const series = cal.map((d, i) => {
+    let v = meta.cash_usd;
+    for (const p of book.positions) {
+      const arr = ff[p.symbol];
+      const px = arr ? toUSD(p.symbol, i, arr[i]) : p.stmt_price; // stmt_price is USD
+      v += p.qty * px;
+    }
+    return { d, v };
+  });
+
+  // ---- tiles
+  const ret = total / meta.inception_value - 1;
+  const dayChg = series.length > 1 ? series[iLast].v - series[iPrev].v : 0;
+  const vsStmt = total - meta.statement_value;
+  const tiles = [
+    { k: "Net asset value", v: fmt$(total), d: `${cal[iLast] || "—"}` },
+    { k: "Since inception", v: fmtP(ret * 100), d: `${fmt$(total - meta.inception_value)} vs ${fmt$(meta.inception_value)}`, c: sgn(ret) },
+    { k: "Day change", v: fmt$(dayChg), d: fmtP(series.length > 1 ? (series[iLast].v / series[iPrev].v - 1) * 100 : 0), c: sgn(dayChg) },
+    { k: `Vs statement ${meta.statement_date}`, v: fmt$(vsStmt), d: `UBS: ${fmt$(meta.statement_value)} · TWR −2.18%`, c: sgn(vsStmt) },
+  ];
+  document.getElementById("tiles").innerHTML = tiles.map(t =>
+    `<div class="tile"><div class="k">${t.k}</div><div class="v ${t.c || ""}">${t.v}</div><div class="d">${t.d}</div></div>`).join("");
+
+  const fresh = (new Date() - new Date(cal[iLast])) / 864e5 < 4;
+  document.getElementById("stamp").innerHTML =
+    `<span class="dot ${fresh ? "" : "stale"}"></span>prices ${prices.updated_utc}`;
+
+  drawLine(series, meta);
+  drawDonut(rows, meta, total);
+  buildTable(rows, meta, total);
+
+  document.getElementById("foot").innerHTML =
+    `Prices: Yahoo Finance EOD (funds are prior-day NAV; EUR lines converted at EURUSD). ` +
+    `Baseline & checkpoints: UBS statement of ${meta.statement_date}. Cash held constant at ${fmt$(meta.cash_usd)} — ` +
+    `dividends/fees since the statement are not reflected until the next statement import. Not investment advice; personal tracking tool.`;
+}
+
+// ---------- line chart
+function drawLine(series, meta) {
+  const el = document.getElementById("linechart");
+  const W = el.clientWidth || 720, H = 300, m = { t: 14, r: 14, b: 26, l: 58 };
+  const xs = series.map(p => new Date(p.d).getTime());
+  const ys = series.map(p => p.v);
+  const cps = meta.checkpoints.map(c => ({ ...c, t: new Date(c.date).getTime() }));
+  const x0 = Math.min(xs[0], cps[0].t), x1 = Math.max(xs[xs.length - 1], cps[cps.length - 1].t);
+  let y0 = Math.min(...ys, ...cps.map(c => c.value), meta.inception_value);
+  let y1 = Math.max(...ys, ...cps.map(c => c.value), meta.inception_value);
+  const pad = (y1 - y0) * 0.12 || 1000; y0 -= pad; y1 += pad;
+  const X = t => m.l + (t - x0) / (x1 - x0) * (W - m.l - m.r);
+  const Y = v => m.t + (y1 - v) / (y1 - y0) * (H - m.t - m.b);
+
+  let g = "";
+  const ticks = 4;
+  for (let i = 0; i <= ticks; i++) {
+    const v = y0 + (y1 - y0) * i / ticks, y = Y(v);
+    g += `<line class="gridline" x1="${m.l}" x2="${W - m.r}" y1="${y}" y2="${y}"/>` +
+         `<text x="${m.l - 8}" y="${y + 4}" text-anchor="end">${"$" + Math.round(v / 1000) + "k"}</text>`;
+  }
+  const months = {};
+  series.forEach(p => { const mm = p.d.slice(0, 7); if (!months[mm]) months[mm] = p.d; });
+  for (const mm in months) {
+    const t = new Date(months[mm]).getTime();
+    g += `<text x="${X(t)}" y="${H - 8}" text-anchor="middle">${new Date(t).toLocaleString("en", { month: "short" })}</text>`;
+  }
+  g += `<line class="axisline" x1="${m.l}" x2="${W - m.r}" y1="${H - m.b}" y2="${H - m.b}"/>`;
+  g += `<line x1="${m.l}" x2="${W - m.r}" y1="${Y(meta.inception_value)}" y2="${Y(meta.inception_value)}" stroke="var(--ink3)" stroke-dasharray="5 5" stroke-width="1"/>`;
+
+  const path = series.map((p, i) => (i ? "L" : "M") + X(xs[i]).toFixed(1) + " " + Y(p.v).toFixed(1)).join(" ");
+  g += `<path d="${path}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>`;
+  for (const c of cps)
+    g += `<circle cx="${X(c.t)}" cy="${Y(c.value)}" r="4.5" fill="var(--bg)" stroke="var(--ink)" stroke-width="2" data-cp="${c.date}"/>`;
+
+  g += `<line id="xhair" x1="0" x2="0" y1="${m.t}" y2="${H - m.b}" stroke="var(--ink3)" stroke-width="1" visibility="hidden"/>` +
+       `<circle id="xdot" r="4" fill="var(--accent)" stroke="var(--bg)" stroke-width="2" visibility="hidden"/>`;
+  el.innerHTML = `<svg id="linesvg" width="100%" viewBox="0 0 ${W} ${H}">${g}</svg>`;
+  document.getElementById("linelegend").innerHTML =
+    `<span><span class="sw" style="background:var(--accent)"></span>Portfolio (Yahoo marks)</span>` +
+    `<span><span class="sw" style="background:var(--bg);border:2px solid var(--ink);width:7px;height:7px;border-radius:50%"></span>UBS statement</span>`;
+
+  const svg = document.getElementById("linesvg");
+  const xh = document.getElementById("xhair"), xd = document.getElementById("xdot");
+  svg.addEventListener("mousemove", ev => {
+    const r = svg.getBoundingClientRect();
+    const t = x0 + ((ev.clientX - r.left) / r.width * W - m.l) / (W - m.l - m.r) * (x1 - x0);
+    const cp = cps.find(c => Math.abs(X(c.t) - ((ev.clientX - r.left) / r.width * W)) < 7);
+    let i = 0; while (i < xs.length - 1 && xs[i] < t) i++;
+    if (i > 0 && Math.abs(xs[i - 1] - t) < Math.abs(xs[i] - t)) i--;
+    const px = X(xs[i]), py = Y(series[i].v);
+    xh.setAttribute("x1", px); xh.setAttribute("x2", px); xh.setAttribute("visibility", "visible");
+    xd.setAttribute("cx", px); xd.setAttribute("cy", py); xd.setAttribute("visibility", "visible");
+    let html = `<div class="t">${series[i].d}</div><b>${fmt$(series[i].v)}</b> <span class="${sgn(series[i].v - meta.inception_value)}">${fmtP((series[i].v / meta.inception_value - 1) * 100)}</span>`;
+    if (cp) html += `<div class="t" style="margin-top:5px">UBS ${cp.date}</div>${fmt$(cp.value)} · TWR ${fmtP(cp.twr_cum)}`;
+    showTip(html, ev.clientX, ev.clientY);
+  });
+  svg.addEventListener("mouseleave", () => { hideTip(); xh.setAttribute("visibility", "hidden"); xd.setAttribute("visibility", "hidden"); });
+}
+
+// ---------- donut
+function drawDonut(rows, meta, total) {
+  const by = { Bonds: 0, Equities: 0, Gold: 0, Cash: meta.cash_usd };
+  rows.forEach(r => by[r.class] += r.mv);
+  const order = ["Bonds", "Equities", "Gold", "Cash"];
+  const W = 260, R = 92, r2 = 58, cx = W / 2, cy = W / 2;
+  let a = -Math.PI / 2, g = "";
+  for (const k of order) {
+    const frac = by[k] / total, a2 = a + frac * 2 * Math.PI;
+    const large = frac > 0.5 ? 1 : 0;
+    const p = [cx + R * Math.cos(a), cy + R * Math.sin(a), cx + R * Math.cos(a2), cy + R * Math.sin(a2),
+               cx + r2 * Math.cos(a2), cy + r2 * Math.sin(a2), cx + r2 * Math.cos(a), cy + r2 * Math.sin(a)];
+    g += `<path d="M${p[0]} ${p[1]} A${R} ${R} 0 ${large} 1 ${p[2]} ${p[3]} L${p[4]} ${p[5]} A${r2} ${r2} 0 ${large} 0 ${p[6]} ${p[7]} Z"
+           fill="${CLS_COLOR[k]}" stroke="var(--surface)" stroke-width="2" data-k="${k}"/>`;
+    a = a2;
+  }
+  g += `<text x="${cx}" y="${cy - 4}" text-anchor="middle" style="font-size:17px;font-weight:650;fill:var(--ink)">${fmt$(total / 1000) + "k"}</text>` +
+       `<text x="${cx}" y="${cy + 15}" text-anchor="middle">net assets</text>`;
+  document.getElementById("donut").innerHTML =
+    `<svg width="100%" viewBox="0 0 ${W} ${W}" style="max-width:270px;display:block;margin:0 auto">${g}</svg>`;
+  document.getElementById("donutlegend").innerHTML = order.map(k =>
+    `<span><span class="sw" style="background:${CLS_COLOR[k]}"></span>${k} · ${(by[k] / total * 100).toFixed(1)}% · ${fmt$(by[k])}</span>`).join("");
+  document.querySelectorAll("#donut path").forEach(p => {
+    p.addEventListener("mousemove", ev => {
+      const k = p.dataset.k;
+      showTip(`<div class="t">${k}</div><b>${fmt$(by[k])}</b> · ${(by[k] / total * 100).toFixed(2)}%`, ev.clientX, ev.clientY);
+    });
+    p.addEventListener("mouseleave", hideTip);
+  });
+}
+
+// ---------- table
+function buildTable(rows, meta, total) {
+  let filter = "All", sortK = "mv", sortDir = -1;
+  const fEl = document.getElementById("filters");
+  const classes = ["All", "Bonds", "Equities", "Gold"];
+  fEl.innerHTML = classes.map(c => `<button data-c="${c}" class="${c === "All" ? "on" : ""}">${c}</button>`).join("");
+  fEl.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    filter = b.dataset.c;
+    fEl.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b));
+    render();
+  }));
+  document.querySelectorAll("#postable thead th").forEach(th => th.addEventListener("click", () => {
+    const k = th.dataset.k === "name" ? "name" : { qty: "qty", cost: "cost_usd", last: "last", day: "day", mv: "mv", w: "w", pnl: "pnl", pnlp: "pnlp" }[th.dataset.k];
+    if (sortK === k) sortDir *= -1; else { sortK = k; sortDir = k === "name" ? 1 : -1; }
+    render();
+  }));
+
+  function render() {
+    const rs = rows.filter(r => filter === "All" || r.class === filter)
+      .sort((a, b) => (a[sortK] > b[sortK] ? 1 : -1) * sortDir);
+    document.querySelector("#postable tbody").innerHTML = rs.map(r => `
+      <tr>
+        <td><span class="cls" style="background:${CLS_COLOR[r.class]}"></span><span class="nm">${r.name}</span><span class="sym">${r.symbol}</span>${r.stale ? '<span class="stale" title="last close ' + r.last_date + '">●</span>' : ""}</td>
+        <td>${fmtN(r.qty, r.qty % 1 ? 3 : 0)}</td>
+        <td>${fmtN(r.cost_usd)}</td>
+        <td title="close ${r.last_date}">${fmtN(r.last)}</td>
+        <td class="${sgn(r.day)}">${fmtP(r.day)}</td>
+        <td>${fmt$(r.mv)}</td>
+        <td>${r.w.toFixed(2)}%</td>
+        <td class="${sgn(r.pnl)}">${fmt$(r.pnl)}</td>
+        <td class="${sgn(r.pnlp)}">${fmtP(r.pnlp)}</td>
+      </tr>`).join("");
+    const inv = rs.reduce((a, r) => a + r.mv, 0), pnl = rs.reduce((a, r) => a + r.pnl, 0);
+    document.querySelector("#postable tfoot").innerHTML =
+      `<tr><td>${filter === "All" ? rs.length + " positions + cash " + fmt$(meta.cash_usd) : rs.length + " positions"}</td>
+       <td colspan="4"></td><td>${fmt$(filter === "All" ? inv + meta.cash_usd : inv)}</td>
+       <td>${((filter === "All" ? inv + meta.cash_usd : inv) / total * 100).toFixed(1)}%</td>
+       <td class="${sgn(pnl)}">${fmt$(pnl)}</td><td></td></tr>`;
+  }
+  render();
+  document.getElementById("tablenote").textContent =
+    "Avg cost and quantities from the UBS statement (09 Jul 2026). P&L is unrealized, in USD, vs average cost. ● = price older than 4 days (fund NAVs lag).";
+}
+
+main().catch(e => {
+  document.getElementById("tiles").innerHTML =
+    `<div class="tile"><div class="k">Error</div><div class="d">${e.message} — run fetch_prices.py to generate data/prices.json</div></div>`;
+});
+</script>
+</body>
+</html>
