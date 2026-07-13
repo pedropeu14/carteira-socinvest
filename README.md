@@ -28,6 +28,20 @@ python fetch_prices.py
 python -m http.server 8123   # abrir http://localhost:8123
 ```
 
+## Comprar / vender posição
+
+```bash
+# compra (resolve o ticker Yahoo pelo ISIN, debita o caixa, atualiza preços):
+python adicionar_ativo.py IE000ABC1234 100 25.50 --classe Bonds --push
+
+# reforço de posição existente (agrega e recalcula custo médio): mesmo comando
+# venda parcial ou total (credita o caixa):
+python adicionar_ativo.py --vender GLD --preco 377.00 --qtd 20 --push
+```
+
+`--dry-run` mostra sem gravar; `--moeda EUR` se o preço pago não for USD;
+`--simbolo` força o ticker quando a busca por ISIN não achar a linha certa.
+
 ## Atualizar com um novo extrato
 
 Editar `positions.json`: quantidades/custos das posições, `cash_usd`,

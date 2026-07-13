@@ -68,11 +68,12 @@ def main():
     p1 = int((inception - timedelta(days=7)).replace(tzinfo=timezone.utc).timestamp())
     p2 = int(time.time()) + 86400
 
-    symbols = [p["symbol"] for p in book["positions"]] + ["EURUSD=X"]
+    symbols = [p["symbol"] for p in book["positions"]]
     out = {"updated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
            "series": {}}
     errors = []
-    for sym in symbols:
+
+    def grab(sym):
         res = fetch_chart(sym, p1, p2)
         out["series"][sym] = res
         if "error" in res:
@@ -81,6 +82,16 @@ def main():
         else:
             print(f"ok   {sym:12s} {res['currency']} {res['last']} ({res['last_date']}, {len(res['dates'])} closes)")
         time.sleep(PAUSE)
+
+    for sym in symbols:
+        grab(sym)
+
+    # câmbio p/ USD de toda moeda de cotação encontrada (GBp = pence -> GBP)
+    ccys = {("GBP" if r.get("currency") == "GBp" else r.get("currency"))
+            for r in out["series"].values()} - {None, "USD"}
+    for ccy in sorted(ccys):
+        symbols.append(f"{ccy}USD=X")
+        grab(f"{ccy}USD=X")
 
     os.makedirs(os.path.join(BASE_DIR, "data"), exist_ok=True)
     path = os.path.join(BASE_DIR, "data", "prices.json")

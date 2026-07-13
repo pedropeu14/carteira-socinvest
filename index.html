@@ -174,8 +174,14 @@ async function main() {
     for (let i = 0; i < arr.length; i++) arr[i] = arr[i] == null ? first : arr[i];
     ff[sym] = arr;
   }
-  const fx = ff["EURUSD=X"] || cal.map(() => 1);
-  const toUSD = (sym, i, px) => (S[sym] && S[sym].currency === "EUR") ? px * fx[i] : px;
+  const fxMap = {};
+  for (const k in ff) { const m = k.match(/^([A-Z]{3})USD=X$/); if (m) fxMap[m[1]] = ff[k]; }
+  const toUSD = (sym, i, px) => {
+    let ccy = S[sym] && S[sym].currency;
+    if (!ccy || ccy === "USD") return px;
+    if (ccy === "GBp") { px /= 100; ccy = "GBP"; }   // Londres cota em pence
+    return fxMap[ccy] ? px * fxMap[ccy][i] : px;
+  };
 
   // ---- per-position current values
   const iLast = cal.length - 1, iPrev = Math.max(0, cal.length - 2);
