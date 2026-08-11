@@ -1,0 +1,378 @@
+{
+ "meta": {
+  "source": "UBS account transactions, portfolio 0240007670380003, 26.05.2026 - 07.08.2026",
+  "basis": "value date (settlement) for both cash and holdings",
+  "transactions": 79,
+  "cash_final": 21882.18,
+  "note": "Cash balances are the running balances printed on the UBS statement, so dividends, interest and fees are included on the day they landed. Buys/sells are internal transfers between cash and securities and do not affect NAV; there are no external flows after inception besides USD 13.45 of e-banking transfers, treated as costs."
+ },
+ "cash": {
+  "2026-05-26": 1000000.0,
+  "2026-05-27": 666103.5,
+  "2026-05-28": 575512.07,
+  "2026-05-29": 122767.26,
+  "2026-05-31": 122766.61,
+  "2026-06-01": 122765.95,
+  "2026-06-03": 112580.08,
+  "2026-06-04": 108037.76,
+  "2026-06-08": 98181.79,
+  "2026-06-11": 88617.09,
+  "2026-06-15": 88621.09,
+  "2026-06-17": 78723.97,
+  "2026-06-18": 78956.53,
+  "2026-06-22": 69459.95,
+  "2026-06-23": 59016.41,
+  "2026-06-24": 49042.53,
+  "2026-06-25": 39474.08,
+  "2026-06-30": 39192.66,
+  "2026-07-01": 39186.27,
+  "2026-07-07": 39704.88,
+  "2026-07-09": 19188.69,
+  "2026-07-13": 19270.96,
+  "2026-07-17": 29239.54,
+  "2026-07-20": 32499.61,
+  "2026-07-24": 31724.34,
+  "2026-07-31": 31718.05,
+  "2026-08-03": 31711.65,
+  "2026-08-05": 41893.82,
+  "2026-08-06": 42187.15,
+  "2026-08-07": 21882.18
+ },
+ "trades": {
+  "2026-05-27": [
+   {
+    "symbol": "GOOG",
+    "isin": "US02079K1079",
+    "qty": 26
+   },
+   {
+    "symbol": "AMZN",
+    "isin": "US0231351067",
+    "qty": 37
+   },
+   {
+    "symbol": "EUV",
+    "isin": "US2189466632",
+    "qty": 530
+   },
+   {
+    "symbol": "META",
+    "isin": "US30303M1027",
+    "qty": 16
+   },
+   {
+    "symbol": "AIRR",
+    "isin": "US33738R7044",
+    "qty": 79
+   },
+   {
+    "symbol": "ARGT",
+    "isin": "US37950E2596",
+    "qty": 109
+   },
+   {
+    "symbol": "DTCR",
+    "isin": "US37954Y2366",
+    "qty": 164
+   },
+   {
+    "symbol": "PMAY",
+    "isin": "US45782C3189",
+    "qty": 728
+   },
+   {
+    "symbol": "NMAY",
+    "isin": "US45784N6765",
+    "qty": 1021
+   },
+   {
+    "symbol": "EWZ",
+    "isin": "US4642864007",
+    "qty": 272
+   },
+   {
+    "symbol": "ECH",
+    "isin": "US4642866408",
+    "qty": 248
+   },
+   {
+    "symbol": "TIP",
+    "isin": "US4642871762",
+    "qty": 362
+   },
+   {
+    "symbol": "TLT",
+    "isin": "US4642874329",
+    "qty": 236
+   },
+   {
+    "symbol": "PICK",
+    "isin": "US46434G8481",
+    "qty": 152
+   },
+   {
+    "symbol": "LOHA",
+    "isin": "US77926Y7085",
+    "qty": 399
+   },
+   {
+    "symbol": "GLD",
+    "isin": "US78463V1070",
+    "qty": 120
+   },
+   {
+    "symbol": "XLE",
+    "isin": "US81369Y5069",
+    "qty": 255
+   },
+   {
+    "symbol": "XLU",
+    "isin": "US81369Y8865",
+    "qty": 330
+   },
+   {
+    "symbol": "VOLT",
+    "isin": "US87975E8342",
+    "qty": 126
+   },
+   {
+    "symbol": "GDX",
+    "isin": "US92189F1066",
+    "qty": 114
+   },
+   {
+    "symbol": "REMX",
+    "isin": "US92189H8051",
+    "qty": 50
+   }
+  ],
+  "2026-05-28": [
+   {
+    "symbol": "BLTN.AS",
+    "isin": "DE000A2QP4D2",
+    "qty": 441
+   },
+   {
+    "symbol": "AT1.L",
+    "isin": "IE00BFZPF322",
+    "qty": 662
+   },
+   {
+    "symbol": "BNK.PA",
+    "isin": "LU1834983477",
+    "qty": 263
+   }
+  ],
+  "2026-05-29": [
+   {
+    "symbol": "0P0001O030",
+    "isin": "IE000AQP1N64",
+    "qty": 715.512
+   },
+   {
+    "symbol": "0P0001SDO7",
+    "isin": "IE000RDB0I49",
+    "qty": 417.42
+   },
+   {
+    "symbol": "0P0001AKJN",
+    "isin": "LI0364281548",
+    "qty": 644.71
+   },
+   {
+    "symbol": "PJAG.SG",
+    "isin": "LU0255798018",
+    "qty": 135.385
+   },
+   {
+    "symbol": "0P0001O2NN",
+    "isin": "LU2416422678",
+    "qty": 774.194
+   },
+   {
+    "symbol": "0P0001R3HC",
+    "isin": "LU2630425226",
+    "qty": 2148.997
+   }
+  ],
+  "2026-06-03": [
+   {
+    "symbol": "NASA",
+    "isin": "US87975E7765",
+    "qty": 265
+   }
+  ],
+  "2026-06-04": [
+   {
+    "symbol": "JEDI.L",
+    "isin": "IE000YU9K6K2",
+    "qty": 40
+   }
+  ],
+  "2026-06-08": [
+   {
+    "symbol": "FOTO",
+    "isin": "US26923V5975",
+    "qty": 380
+   }
+  ],
+  "2026-06-11": [
+   {
+    "symbol": "BABA",
+    "isin": "US01609W1027",
+    "qty": 80
+   }
+  ],
+  "2026-06-17": [
+   {
+    "symbol": "JEDI",
+    "isin": "US26922B3942",
+    "qty": 310
+   }
+  ],
+  "2026-06-22": [
+   {
+    "symbol": "MSFT",
+    "isin": "US5949181045",
+    "qty": 25
+   }
+  ],
+  "2026-06-23": [
+   {
+    "symbol": "GOOGL",
+    "isin": "US02079K3059",
+    "qty": 30
+   }
+  ],
+  "2026-06-24": [
+   {
+    "symbol": "NVDA",
+    "isin": "US67066G1040",
+    "qty": 50
+   }
+  ],
+  "2026-06-25": [
+   {
+    "symbol": "COPX",
+    "isin": "US37954Y8306",
+    "qty": 125
+   }
+  ],
+  "2026-07-09": [
+   {
+    "symbol": "KWEB",
+    "isin": "US5007673065",
+    "qty": 390
+   },
+   {
+    "symbol": "DRAM",
+    "isin": "US77926X3200",
+    "qty": 170
+   }
+  ],
+  "2026-07-17": [
+   {
+    "symbol": "GOOG",
+    "isin": "US02079K1079",
+    "qty": -26
+   },
+   {
+    "symbol": "IBM",
+    "isin": "US4592001014",
+    "qty": 45
+   },
+   {
+    "symbol": "ECH",
+    "isin": "US4642866408",
+    "qty": -248
+   }
+  ],
+  "2026-07-20": [
+   {
+    "symbol": "JEDI.L",
+    "isin": "IE000YU9K6K2",
+    "qty": -40
+   }
+  ],
+  "2026-07-24": [
+   {
+    "symbol": "AMZN",
+    "isin": "US0231351067",
+    "qty": 40
+   },
+   {
+    "symbol": "TIP",
+    "isin": "US4642871762",
+    "qty": -362
+   },
+   {
+    "symbol": "TLT",
+    "isin": "US4642874329",
+    "qty": 360
+   }
+  ],
+  "2026-08-05": [
+   {
+    "symbol": "AMZN",
+    "isin": "US0231351067",
+    "qty": -37
+   }
+  ],
+  "2026-08-06": [
+   {
+    "symbol": "ARGT",
+    "isin": "US37950E2596",
+    "qty": -109
+   },
+   {
+    "symbol": "EWJ",
+    "isin": "US46434G8226",
+    "qty": 105
+   }
+  ],
+  "2026-08-07": [
+   {
+    "symbol": "MU",
+    "isin": "US5951121038",
+    "qty": 11
+   },
+   {
+    "symbol": "SPCX",
+    "isin": "US84615Q1031",
+    "qty": 95
+   }
+  ]
+ },
+ "closed": [
+  {
+   "isin": "US4642871762",
+   "symbol": "TIP",
+   "name": "iShares TIPS Bond ETF",
+   "class": "Bonds"
+  },
+  {
+   "isin": "US37950E2596",
+   "symbol": "ARGT",
+   "name": "Global X MSCI Argentina ETF",
+   "class": "Equities"
+  },
+  {
+   "isin": "US4642866408",
+   "symbol": "ECH",
+   "name": "iShares MSCI Chile ETF",
+   "class": "Equities"
+  },
+  {
+   "isin": "US02079K1079",
+   "symbol": "GOOG",
+   "name": "Alphabet Inc -C-",
+   "class": "Equities"
+  },
+  {
+   "isin": "IE000YU9K6K2",
+   "symbol": "JEDI.L",
+   "name": "VanEck Space Innovators UCITS ETF",
+   "class": "Equities"
+  }
+ ]
+}

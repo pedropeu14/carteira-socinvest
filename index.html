@@ -161,9 +161,10 @@ function showTip(html, x, y) {
 function hideTip() { tooltip.style.display = "none"; }
 
 async function main() {
-  const [book, prices] = await Promise.all([
+  const [book, prices, ledger] = await Promise.all([
     fetch("positions.json").then(r => r.json()),
     fetch("data/prices.json").then(r => r.json()),
+    fetch("ledger.json").then(r => r.ok ? r.json() : null).catch(() => null),
   ]);
   const meta = book.meta, S = prices.series;
 
@@ -213,19 +214,42 @@ async function main() {
   const total = invested + meta.cash_usd;
   rows.forEach(r => r.w = r.mv / total * 100);
 
-  // ---- portfolio daily series
-  const series = cal.map((d, i) => {
-    let v = meta.cash_usd;
-    for (const p of book.positions) {
-      const arr = ff[p.symbol];
-      const px = arr ? toUSD(p.symbol, i, arr[i]) : p.stmt_price; // stmt_price is USD
-      v += p.qty * px;
+  // ---- portfolio daily series = NAV real de cada dia.
+  // Reconstruido do ledger: caixa do extrato (que ja' embute dividendos, juros
+  // e taxas na data em que cairam) + as quantidades vigentes naquele dia.
+  // Compra/venda nao mexe no NAV — so troca caixa por papel — entao a variacao
+  // diaria e' limpa mesmo com trade no meio do caminho.
+  const missingPx = new Set();
+  const series = (() => {
+    if (!ledger) {   // sem ledger: cesta de HOJE remarcada p/ tras (nao e' NAV)
+      return cal.map((d, i) => {
+        let v = meta.cash_usd;
+        for (const p of book.positions) {
+          const arr = ff[p.symbol];
+          v += p.qty * (arr ? toUSD(p.symbol, i, arr[i]) : p.stmt_price);
+        }
+        return { d, v };
+      });
     }
-    return { d, v };
-  });
+    const cds = Object.keys(ledger.cash).sort(), tds = Object.keys(ledger.trades).sort();
+    const qty = {};
+    let ci = 0, ti = 0, cash = 0;
+    return cal.map((d, i) => {
+      while (ci < cds.length && cds[ci] <= d) cash = ledger.cash[cds[ci++]];
+      while (ti < tds.length && tds[ti] <= d)
+        for (const t of ledger.trades[tds[ti++]]) qty[t.symbol] = (qty[t.symbol] || 0) + t.qty;
+      let v = cash;
+      for (const sym in qty) {
+        if (!qty[sym]) continue;
+        if (!ff[sym]) { missingPx.add(sym); continue; }   // nunca silencioso
+        v += qty[sym] * toUSD(sym, i, ff[sym][i]);
+      }
+      return { d, v };
+    });
+  })();
 
-  // ---- benchmark: mesmo capital inicial, remarcado pelos closes do ETF.
-  // Price-only nas duas pontas (a linha da carteira tambem ignora dividendos).
+  // ---- benchmark: mesmo capital inicial, na mesma data, em retorno total
+  // (adjclose). Comparavel ao NAV, que tambem inclui proventos via caixa.
   const bm = meta.benchmark, bmArr = bm && ff[bm.symbol];
   const bench = bmArr && bmArr[0]
     ? cal.map((d, i) => ({ d, v: meta.inception_value * toUSD(bm.symbol, i, bmArr[i]) / toUSD(bm.symbol, 0, bmArr[0]) }))
@@ -258,10 +282,19 @@ async function main() {
   drawDonut(rows, meta, total);
   buildTable(rows, meta, total);
 
+  const flat = Object.keys(S).filter(k => !/USD=X$/.test(k) && (S[k].dates || []).length < 5);
+  const ledgerEnd = ledger ? Object.keys(ledger.cash).sort().pop() : null;
   document.getElementById("foot").innerHTML =
     `Prices: Yahoo Finance EOD (funds are prior-day NAV; EUR lines converted at EURUSD). ` +
-    `Baseline & checkpoints: UBS statement of ${meta.statement_date}. Cash held constant at ${fmt$(meta.cash_usd)} — ` +
-    `dividends/fees since the statement are not reflected until the next statement import. Not investment advice; personal tracking tool.`;
+    `Positions, avg cost and checkpoints: UBS statement of ${meta.statement_date}. ` +
+    (ledger
+      ? `Cash and trades: UBS account ledger through ${ledgerEnd} (${ledger.meta.transactions} bookings, ` +
+        `dividends and fees included on the day they landed); after that the balance is held at ` +
+        `${fmt$(meta.cash_usd)} until the next import. `
+      : `Cash held constant at ${fmt$(meta.cash_usd)} — dividends/fees are not reflected until the next statement import. `) +
+    (flat.length ? `<b>${flat.join(", ")}</b> has no usable Yahoo history and is carried flat at its last known price. ` : "") +
+    (missingPx.size ? `<b>Missing prices: ${[...missingPx].join(", ")} — excluded from the NAV line.</b> ` : "") +
+    `Not investment advice; personal tracking tool.`;
 }
 
 // ---------- line chart
@@ -313,10 +346,12 @@ function drawLine(series, meta, bench, bm) {
     `<span><span class="sw" style="background:var(--bg);border:2px solid var(--ink);width:7px;height:7px;border-radius:50%"></span>UBS statement</span>`;
 
   document.getElementById("linenote").textContent =
-    "Line: current holdings marked to Yahoo daily closes + cash. Dots: official UBS statement values " +
-    "(TWR in tooltip). Dashed: initial capital." +
-    (bench ? ` ${bm.name} (${bm.symbol}) starts from the same ${fmt$(meta.inception_value)} at inception` +
-             " — both lines are price-only, dividends excluded on either side." : "");
+    "Line: daily NAV rebuilt from the UBS ledger — the cash balance of that day plus the positions " +
+    "actually held, marked to Yahoo closes. Dots: official UBS statement values (TWR in tooltip). " +
+    "Dashed: initial capital." +
+    (bench ? ` ${bm.name} (${bm.symbol}) starts from the same ${fmt$(meta.inception_value)} on the same day,` +
+             " on a total-return basis (dividends reinvested) — comparable to the portfolio NAV," +
+             " which picks up dividends and fees through the cash balance." : "");
 
   const svg = document.getElementById("linesvg");
   const xh = document.getElementById("xhair"), xd = document.getElementById("xdot");

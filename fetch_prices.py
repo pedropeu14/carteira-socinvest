@@ -24,7 +24,17 @@ def load_positions():
         return json.load(f)
 
 
-def fetch_chart(symbol, p1, p2):
+def load_ledger():
+    try:
+        with open(os.path.join(BASE_DIR, "ledger.json"), encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+
+
+def fetch_chart(symbol, p1, p2, adjusted=False):
+    """adjusted=True devolve o close ajustado por proventos (retorno total) —
+    usado no benchmark, que precisa ser comparavel ao NAV real da conta."""
     url = CHART_URL.format(sym=urllib.parse.quote(symbol), p1=p1, p2=p2)
     last_err = None
     for attempt in range(RETRIES):
@@ -36,6 +46,12 @@ def fetch_chart(symbol, p1, p2):
             meta = result["meta"]
             ts = result.get("timestamp") or []
             closes = result["indicators"]["quote"][0].get("close") or []
+            if adjusted:
+                adj = ((result["indicators"].get("adjclose") or [{}])[0]).get("adjclose")
+                if adj:
+                    closes = adj
+                else:
+                    print(f"WARN {symbol}: sem adjclose, usando close cru")
             dedup = {}
             for t, c in zip(ts, closes):
                 if c is None:
@@ -69,6 +85,10 @@ def main():
     p2 = int(time.time()) + 86400
 
     symbols = [p["symbol"] for p in book["positions"]]
+    # posicoes ja' encerradas: sem serie delas o NAV historico fica furado
+    for c in load_ledger().get("closed", []):
+        if c["symbol"] not in symbols:
+            symbols.append(c["symbol"])
     bench = (book["meta"].get("benchmark") or {}).get("symbol")
     if bench and bench not in symbols:
         symbols.append(bench)   # benchmark: nao e' posicao, mas precisa da serie
@@ -77,7 +97,7 @@ def main():
     errors = []
 
     def grab(sym):
-        res = fetch_chart(sym, p1, p2)
+        res = fetch_chart(sym, p1, p2, adjusted=(sym == bench))
         out["series"][sym] = res
         if "error" in res:
             errors.append(f"{sym}: {res['error']}")
