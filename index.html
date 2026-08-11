@@ -21,6 +21,7 @@
     --c-bonds: #23a87c;
     --c-gold: #c2851c;
     --c-cash: #9678f0;
+    --bench: #aab4cc;   /* cinza de referencia: as 4 cores de classe ja' estao no donut */
   }
   * { box-sizing: border-box; margin: 0; }
   body {
@@ -105,7 +106,7 @@
     <h2>Portfolio value (USD)</h2>
     <div id="linechart"></div>
     <div class="legend" id="linelegend"></div>
-    <div class="note">Line: current holdings marked to Yahoo daily closes + cash. Dots: official UBS statement values (TWR in tooltip). Dashed: initial capital.</div>
+    <div class="note" id="linenote"></div>
   </div>
   <div class="card">
     <h2>Allocation</h2>
@@ -223,6 +224,14 @@ async function main() {
     return { d, v };
   });
 
+  // ---- benchmark: mesmo capital inicial, remarcado pelos closes do ETF.
+  // Price-only nas duas pontas (a linha da carteira tambem ignora dividendos).
+  const bm = meta.benchmark, bmArr = bm && ff[bm.symbol];
+  const bench = bmArr && bmArr[0]
+    ? cal.map((d, i) => ({ d, v: meta.inception_value * toUSD(bm.symbol, i, bmArr[i]) / toUSD(bm.symbol, 0, bmArr[0]) }))
+    : null;
+  const bmRet = bench ? bench[iLast].v / meta.inception_value - 1 : null;
+
   // ---- tiles
   const ret = total / meta.inception_value - 1;
   const dayChg = series.length > 1 ? series[iLast].v - series[iPrev].v : 0;
@@ -234,6 +243,10 @@ async function main() {
     { k: "Day change", v: fmt$(dayChg), d: fmtP(series.length > 1 ? (series[iLast].v / series[iPrev].v - 1) * 100 : 0), c: sgn(dayChg) },
     { k: `Vs statement ${meta.statement_date}`, v: fmt$(vsStmt), d: `UBS: ${fmt$(meta.statement_value)} · TWR ${fmtP(lastCp.twr_cum)}`, c: sgn(vsStmt) },
   ];
+  if (bench) tiles.push({
+    k: `Vs ${bm.symbol}`, v: fmtP((ret - bmRet) * 100), c: sgn(ret - bmRet),
+    d: `${bm.symbol} ${fmtP(bmRet * 100)} · portfolio ${fmtP(ret * 100)}`,
+  });
   document.getElementById("tiles").innerHTML = tiles.map(t =>
     `<div class="tile"><div class="k">${t.k}</div><div class="v ${t.c || ""}">${t.v}</div><div class="d">${t.d}</div></div>`).join("");
 
@@ -241,7 +254,7 @@ async function main() {
   document.getElementById("stamp").innerHTML =
     `<span class="dot ${fresh ? "" : "stale"}"></span>prices ${prices.updated_utc}`;
 
-  drawLine(series, meta);
+  drawLine(series, meta, bench, bm);
   drawDonut(rows, meta, total);
   buildTable(rows, meta, total);
 
@@ -252,15 +265,16 @@ async function main() {
 }
 
 // ---------- line chart
-function drawLine(series, meta) {
+function drawLine(series, meta, bench, bm) {
   const el = document.getElementById("linechart");
   const W = el.clientWidth || 720, H = 300, m = { t: 14, r: 14, b: 26, l: 58 };
   const xs = series.map(p => new Date(p.d).getTime());
   const ys = series.map(p => p.v);
+  const bys = bench ? bench.map(p => p.v) : [];
   const cps = meta.checkpoints.map(c => ({ ...c, t: new Date(c.date).getTime() }));
   const x0 = Math.min(xs[0], cps[0].t), x1 = Math.max(xs[xs.length - 1], cps[cps.length - 1].t);
-  let y0 = Math.min(...ys, ...cps.map(c => c.value), meta.inception_value);
-  let y1 = Math.max(...ys, ...cps.map(c => c.value), meta.inception_value);
+  let y0 = Math.min(...ys, ...bys, ...cps.map(c => c.value), meta.inception_value);
+  let y1 = Math.max(...ys, ...bys, ...cps.map(c => c.value), meta.inception_value);
   const pad = (y1 - y0) * 0.12 || 1000; y0 -= pad; y1 += pad;
   const X = t => m.l + (t - x0) / (x1 - x0) * (W - m.l - m.r);
   const Y = v => m.t + (y1 - v) / (y1 - y0) * (H - m.t - m.b);
@@ -281,6 +295,10 @@ function drawLine(series, meta) {
   g += `<line class="axisline" x1="${m.l}" x2="${W - m.r}" y1="${H - m.b}" y2="${H - m.b}"/>`;
   g += `<line x1="${m.l}" x2="${W - m.r}" y1="${Y(meta.inception_value)}" y2="${Y(meta.inception_value)}" stroke="var(--ink3)" stroke-dasharray="5 5" stroke-width="1"/>`;
 
+  if (bench) {   // benchmark primeiro, para a carteira desenhar por cima
+    const bpath = bench.map((p, i) => (i ? "L" : "M") + X(xs[i]).toFixed(1) + " " + Y(p.v).toFixed(1)).join(" ");
+    g += `<path d="${bpath}" fill="none" stroke="var(--bench)" stroke-width="1.6" stroke-linejoin="round" opacity=".85"/>`;
+  }
   const path = series.map((p, i) => (i ? "L" : "M") + X(xs[i]).toFixed(1) + " " + Y(p.v).toFixed(1)).join(" ");
   g += `<path d="${path}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>`;
   for (const c of cps)
@@ -291,7 +309,14 @@ function drawLine(series, meta) {
   el.innerHTML = `<svg id="linesvg" width="100%" viewBox="0 0 ${W} ${H}">${g}</svg>`;
   document.getElementById("linelegend").innerHTML =
     `<span><span class="sw" style="background:var(--accent)"></span>Portfolio (Yahoo marks)</span>` +
+    (bench ? `<span><span class="sw" style="background:var(--bench)"></span>${bm.symbol} — same capital, rebased</span>` : "") +
     `<span><span class="sw" style="background:var(--bg);border:2px solid var(--ink);width:7px;height:7px;border-radius:50%"></span>UBS statement</span>`;
+
+  document.getElementById("linenote").textContent =
+    "Line: current holdings marked to Yahoo daily closes + cash. Dots: official UBS statement values " +
+    "(TWR in tooltip). Dashed: initial capital." +
+    (bench ? ` ${bm.name} (${bm.symbol}) starts from the same ${fmt$(meta.inception_value)} at inception` +
+             " — both lines are price-only, dividends excluded on either side." : "");
 
   const svg = document.getElementById("linesvg");
   const xh = document.getElementById("xhair"), xd = document.getElementById("xdot");
@@ -305,6 +330,7 @@ function drawLine(series, meta) {
     xh.setAttribute("x1", px); xh.setAttribute("x2", px); xh.setAttribute("visibility", "visible");
     xd.setAttribute("cx", px); xd.setAttribute("cy", py); xd.setAttribute("visibility", "visible");
     let html = `<div class="t">${series[i].d}</div><b>${fmt$(series[i].v)}</b> <span class="${sgn(series[i].v - meta.inception_value)}">${fmtP((series[i].v / meta.inception_value - 1) * 100)}</span>`;
+    if (bench) html += `<div style="color:var(--bench)">${bm.symbol} ${fmt$(bench[i].v)} · ${fmtP((bench[i].v / meta.inception_value - 1) * 100)}</div>`;
     if (cp) html += `<div class="t" style="margin-top:5px">UBS ${cp.date}</div>${fmt$(cp.value)} · TWR ${fmtP(cp.twr_cum)}`;
     showTip(html, ev.clientX, ev.clientY);
   });

@@ -21,6 +21,13 @@ positions.json  ──▶  fetch_prices.py  ──▶  data/prices.json  ──�
 - **index.html** — dashboard vanilla JS/SVG: valor da carteira vs. capital
   inicial e checkpoints UBS, alocação por classe, tabela de posições com P&L.
 
+**Benchmark:** `meta.benchmark` (`{symbol, name}`) no positions.json — hoje AOK
+(iShares Core Conservative Allocation, 30/70). O `fetch_prices.py` busca a série
+mesmo sem ser posição, e o dashboard remarca o ETF partindo do **mesmo capital
+inicial na data de início**, desenha a linha cinza no gráfico e mostra o tile
+"Vs AOK". Trocar o benchmark = trocar o símbolo e rodar o fetch. Comparação
+price-only nas duas pontas (a linha da carteira também não soma dividendos).
+
 ## Rodar local
 
 ```bash

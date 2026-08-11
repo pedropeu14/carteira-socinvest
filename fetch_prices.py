@@ -69,6 +69,9 @@ def main():
     p2 = int(time.time()) + 86400
 
     symbols = [p["symbol"] for p in book["positions"]]
+    bench = (book["meta"].get("benchmark") or {}).get("symbol")
+    if bench and bench not in symbols:
+        symbols.append(bench)   # benchmark: nao e' posicao, mas precisa da serie
     out = {"updated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
            "series": {}}
     errors = []

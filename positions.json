@@ -5,6 +5,10 @@
     "base_currency": "USD",
     "inception_date": "2026-05-26",
     "inception_value": 1000000.0,
+    "benchmark": {
+      "symbol": "AOK",
+      "name": "iShares Core Conservative Allocation ETF"
+    },
     "statement_date": "2026-08-10",
     "statement_value": 1000375.0,
     "cash_usd": 21882.18,
