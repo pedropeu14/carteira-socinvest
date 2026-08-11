@@ -5,9 +5,9 @@
     "base_currency": "USD",
     "inception_date": "2026-05-26",
     "inception_value": 1000000.0,
-    "statement_date": "2026-07-09",
-    "statement_value": 978015.0,
-    "cash_usd": 32624.47,
+    "statement_date": "2026-08-10",
+    "statement_value": 1000375.0,
+    "cash_usd": 21882.18,
     "checkpoints": [
       {
         "date": "2026-05-26",
@@ -28,6 +28,11 @@
         "date": "2026-07-09",
         "value": 978015,
         "twr_cum": -2.18
+      },
+      {
+        "date": "2026-08-10",
+        "value": 1000375,
+        "twr_cum": 0.04
       }
     ]
   },
@@ -40,8 +45,8 @@
       "qty": 715.512,
       "cost_usd": 139.760004,
       "price_ccy": "USD",
-      "stmt_price": 141.19,
-      "stmt_value": 101023
+      "stmt_price": 142.71,
+      "stmt_value": 102111
     },
     {
       "name": "Vontobel Credit Opportunities I Acc",
@@ -51,8 +56,8 @@
       "qty": 774.194,
       "cost_usd": 155.0,
       "price_ccy": "USD",
-      "stmt_price": 157.07,
-      "stmt_value": 121603
+      "stmt_price": 157.81,
+      "stmt_value": 122176
     },
     {
       "name": "Solitaire Global Bond Fund I-USD",
@@ -62,8 +67,8 @@
       "qty": 644.71,
       "cost_usd": 186.129996,
       "price_ccy": "USD",
-      "stmt_price": 187.56,
-      "stmt_value": 120922
+      "stmt_price": 188.443,
+      "stmt_value": 121491
     },
     {
       "name": "MontLake Alpha Fixed Income FIUI-USD",
@@ -73,8 +78,8 @@
       "qty": 417.42,
       "cost_usd": 119.783311,
       "price_ccy": "USD",
-      "stmt_price": 120.7366,
-      "stmt_value": 50398
+      "stmt_price": 121.0682,
+      "stmt_value": 50536
     },
     {
       "name": "Morgan Stanley EM Debt Opportunities A Acc",
@@ -84,8 +89,8 @@
       "qty": 2148.997,
       "cost_usd": 13.96,
       "price_ccy": "USD",
-      "stmt_price": 14.23,
-      "stmt_value": 30580
+      "stmt_price": 14.36,
+      "stmt_value": 30860
     },
     {
       "name": "Pictet Emerging Local Currency Debt I-USD",
@@ -95,8 +100,8 @@
       "qty": 135.385,
       "cost_usd": 221.589984,
       "price_ccy": "EUR",
-      "stmt_price": 221.1,
-      "stmt_value": 29934
+      "stmt_price": 224.32,
+      "stmt_value": 30370
     },
     {
       "name": "Invesco USD AT1 CoCo Bond UCITS ETF Acc",
@@ -106,30 +111,19 @@
       "qty": 662,
       "cost_usd": 30.134697,
       "price_ccy": "USD",
-      "stmt_price": 30.285,
-      "stmt_value": 20049
-    },
-    {
-      "name": "iShares TIPS Bond ETF",
-      "isin": "US4642871762",
-      "symbol": "TIP",
-      "class": "Bonds",
-      "qty": 362,
-      "cost_usd": 110.7,
-      "price_ccy": "USD",
-      "stmt_price": 108.13,
-      "stmt_value": 39143
+      "stmt_price": 30.402731,
+      "stmt_value": 20127
     },
     {
       "name": "iShares 20+ Year Treasury Bond ETF",
       "isin": "US4642874329",
       "symbol": "TLT",
       "class": "Bonds",
-      "qty": 236,
-      "cost_usd": 85.33,
+      "qty": 596,
+      "cost_usd": 83.952819,
       "price_ccy": "USD",
-      "stmt_price": 84.49,
-      "stmt_value": 19940
+      "stmt_price": 82.06,
+      "stmt_value": 48908
     },
     {
       "name": "iShares Brazil LTN BRL Govt Bond UCITS USD Acc",
@@ -139,8 +133,8 @@
       "qty": 441,
       "cost_usd": 113.255895,
       "price_ccy": "USD",
-      "stmt_price": 112.125,
-      "stmt_value": 49447
+      "stmt_price": 114.16,
+      "stmt_value": 50345
     },
     {
       "name": "Amundi Stoxx Europe 600 Banks Acc",
@@ -150,8 +144,8 @@
       "qty": 263,
       "cost_usd": 75.6087,
       "price_ccy": "EUR",
-      "stmt_price": 80.3916,
-      "stmt_value": 21143
+      "stmt_price": 86.7719,
+      "stmt_value": 22821
     },
     {
       "name": "Alphabet Inc -A- (GOOGL)",
@@ -161,19 +155,19 @@
       "qty": 30,
       "cost_usd": 345.87,
       "price_ccy": "USD",
-      "stmt_price": 358.89,
-      "stmt_value": 10767
+      "stmt_price": 357.52,
+      "stmt_value": 10726
     },
     {
       "name": "Amazon.com Inc",
       "isin": "US0231351067",
       "symbol": "AMZN",
       "class": "Equities",
-      "qty": 37,
-      "cost_usd": 267.97,
+      "qty": 40,
+      "cost_usd": 249.741429,
       "price_ccy": "USD",
-      "stmt_price": 247.04,
-      "stmt_value": 9140
+      "stmt_price": 278.09,
+      "stmt_value": 11124
     },
     {
       "name": "Meta Platforms Inc -A-",
@@ -183,8 +177,8 @@
       "qty": 16,
       "cost_usd": 611.71375,
       "price_ccy": "USD",
-      "stmt_price": 631.48,
-      "stmt_value": 10104
+      "stmt_price": 594.92,
+      "stmt_value": 9519
     },
     {
       "name": "Microsoft Corp",
@@ -194,8 +188,8 @@
       "qty": 25,
       "cost_usd": 377.41,
       "price_ccy": "USD",
-      "stmt_price": 384.36,
-      "stmt_value": 9609
+      "stmt_price": 506.06,
+      "stmt_value": 12652
     },
     {
       "name": "NVIDIA Corp",
@@ -205,8 +199,8 @@
       "qty": 50,
       "cost_usd": 200.86,
       "price_ccy": "USD",
-      "stmt_price": 202.78,
-      "stmt_value": 10139
+      "stmt_price": 217.55,
+      "stmt_value": 10878
     },
     {
       "name": "Alibaba Group ADR",
@@ -216,8 +210,8 @@
       "qty": 80,
       "cost_usd": 117.5,
       "price_ccy": "USD",
-      "stmt_price": 111.14,
-      "stmt_value": 8891
+      "stmt_price": 132.32,
+      "stmt_value": 10586
     },
     {
       "name": "KraneShares CSI China Internet ETF",
@@ -227,8 +221,8 @@
       "qty": 390,
       "cost_usd": 26.5,
       "price_ccy": "USD",
-      "stmt_price": 26.48,
-      "stmt_value": 10327
+      "stmt_price": 29.11,
+      "stmt_value": 11353
     },
     {
       "name": "Energy Select Sector SPDR",
@@ -238,8 +232,8 @@
       "qty": 255,
       "cost_usd": 59.255019,
       "price_ccy": "USD",
-      "stmt_price": 54.82,
-      "stmt_value": 13979
+      "stmt_price": 60.18,
+      "stmt_value": 15346
     },
     {
       "name": "Utilities Select Sector SPDR",
@@ -249,8 +243,8 @@
       "qty": 330,
       "cost_usd": 45.515,
       "price_ccy": "USD",
-      "stmt_price": 45.11,
-      "stmt_value": 14886
+      "stmt_price": 43.14,
+      "stmt_value": 14236
     },
     {
       "name": "Innovator U.S. Equity Power Buffer ETF May",
@@ -260,8 +254,8 @@
       "qty": 728,
       "cost_usd": 41.26489,
       "price_ccy": "USD",
-      "stmt_price": 41.46,
-      "stmt_value": 30183
+      "stmt_price": 42.08,
+      "stmt_value": 30634
     },
     {
       "name": "Innovator Growth-100 Power Buffer ETF May",
@@ -271,8 +265,8 @@
       "qty": 1021,
       "cost_usd": 29.513143,
       "price_ccy": "USD",
-      "stmt_price": 29.2291,
-      "stmt_value": 29843
+      "stmt_price": 29.6782,
+      "stmt_value": 30301
     },
     {
       "name": "RBA American Industrial Renaissance ETF",
@@ -282,8 +276,8 @@
       "qty": 79,
       "cost_usd": 127.23,
       "price_ccy": "USD",
-      "stmt_price": 124.35,
-      "stmt_value": 9824
+      "stmt_price": 122.44,
+      "stmt_value": 9673
     },
     {
       "name": "Global X Data Center & Digital Infrastructure ETF",
@@ -293,8 +287,8 @@
       "qty": 164,
       "cost_usd": 31.11,
       "price_ccy": "USD",
-      "stmt_price": 29.11,
-      "stmt_value": 4774
+      "stmt_price": 27.95,
+      "stmt_value": 4584
     },
     {
       "name": "Global X Copper Miners ETF",
@@ -304,19 +298,8 @@
       "qty": 125,
       "cost_usd": 76.1,
       "price_ccy": "USD",
-      "stmt_price": 75.4,
-      "stmt_value": 9425
-    },
-    {
-      "name": "Global X MSCI Argentina ETF",
-      "isin": "US37950E2596",
-      "symbol": "ARGT",
-      "class": "Equities",
-      "qty": 109,
-      "cost_usd": 91.393577,
-      "price_ccy": "USD",
-      "stmt_price": 92.23,
-      "stmt_value": 10053
+      "stmt_price": 89.51,
+      "stmt_value": 11189
     },
     {
       "name": "iShares MSCI Brazil ETF",
@@ -326,8 +309,8 @@
       "qty": 272,
       "cost_usd": 36.485,
       "price_ccy": "USD",
-      "stmt_price": 34.96,
-      "stmt_value": 9509
+      "stmt_price": 35.19,
+      "stmt_value": 9572
     },
     {
       "name": "iShares MSCI Global Metals & Mining Producers ETF",
@@ -337,8 +320,8 @@
       "qty": 152,
       "cost_usd": 65.52,
       "price_ccy": "USD",
-      "stmt_price": 56.49,
-      "stmt_value": 8586
+      "stmt_price": 64.14,
+      "stmt_value": 9749
     },
     {
       "name": "VanEck Gold Miners ETF",
@@ -348,8 +331,8 @@
       "qty": 114,
       "cost_usd": 87.14,
       "price_ccy": "USD",
-      "stmt_price": 75.78,
-      "stmt_value": 8639
+      "stmt_price": 90.49,
+      "stmt_value": 10316
     },
     {
       "name": "VanEck Rare Earth & Strategic Metals ETF",
@@ -359,8 +342,8 @@
       "qty": 50,
       "cost_usd": 98.785,
       "price_ccy": "USD",
-      "stmt_price": 80.03,
-      "stmt_value": 4002
+      "stmt_price": 78.45,
+      "stmt_value": 3923
     },
     {
       "name": "Defiance Drone and Modern Warfare ETF",
@@ -370,8 +353,8 @@
       "qty": 310,
       "cost_usd": 31.72,
       "price_ccy": "USD",
-      "stmt_price": 26.51,
-      "stmt_value": 8218
+      "stmt_price": 29.48,
+      "stmt_value": 9139
     },
     {
       "name": "Tema Electrification ETF",
@@ -381,8 +364,8 @@
       "qty": 126,
       "cost_usd": 40.4,
       "price_ccy": "USD",
-      "stmt_price": 38.3876,
-      "stmt_value": 4837
+      "stmt_price": 38.0747,
+      "stmt_value": 4797
     },
     {
       "name": "Tema Space Innovators ETF",
@@ -392,8 +375,8 @@
       "qty": 265,
       "cost_usd": 37.804603,
       "price_ccy": "USD",
-      "stmt_price": 26.7,
-      "stmt_value": 7076
+      "stmt_price": 25.41,
+      "stmt_value": 6734
     },
     {
       "name": "Tuttle Capital Pure Play Photonics ETF",
@@ -403,8 +386,8 @@
       "qty": 380,
       "cost_usd": 25.5,
       "price_ccy": "USD",
-      "stmt_price": 21.5,
-      "stmt_value": 8170
+      "stmt_price": 19.76,
+      "stmt_value": 7509
     },
     {
       "name": "Corgi Lithography & Semiconductor Photonics ETF",
@@ -414,8 +397,8 @@
       "qty": 530,
       "cost_usd": 27.98,
       "price_ccy": "USD",
-      "stmt_price": 27.19,
-      "stmt_value": 14411
+      "stmt_price": 25.33,
+      "stmt_value": 13425
     },
     {
       "name": "Roundhill HALO ETF",
@@ -425,8 +408,8 @@
       "qty": 399,
       "cost_usd": 25.11,
       "price_ccy": "USD",
-      "stmt_price": 25.38,
-      "stmt_value": 10127
+      "stmt_price": 26.76,
+      "stmt_value": 10677
     },
     {
       "name": "Roundhill Memory ETF",
@@ -436,8 +419,8 @@
       "qty": 170,
       "cost_usd": 59.11,
       "price_ccy": "USD",
-      "stmt_price": 64.34,
-      "stmt_value": 10938
+      "stmt_price": 49.59,
+      "stmt_value": 8430
     },
     {
       "name": "SPDR Gold Trust (GLD)",
@@ -447,8 +430,8 @@
       "qty": 120,
       "cost_usd": 415.5,
       "price_ccy": "USD",
-      "stmt_price": 378.18,
-      "stmt_value": 45382
+      "stmt_price": 402.54,
+      "stmt_value": 48305
     },
     {
       "name": "IBM Corp",
@@ -458,8 +441,41 @@
       "qty": 45.0,
       "cost_usd": 205.84,
       "price_ccy": "USD",
-      "stmt_price": 205.84,
-      "stmt_value": 9263
+      "stmt_price": 236.31,
+      "stmt_value": 10634
+    },
+    {
+      "name": "iShares MSCI Japan ETF",
+      "isin": "US46434G8226",
+      "symbol": "EWJ",
+      "class": "Equities",
+      "qty": 105,
+      "cost_usd": 96.000952,
+      "price_ccy": "USD",
+      "stmt_price": 96.055,
+      "stmt_value": 10086
+    },
+    {
+      "name": "Micron Technology Inc",
+      "isin": "US5951121038",
+      "symbol": "MU",
+      "class": "Equities",
+      "qty": 11,
+      "cost_usd": 885.755455,
+      "price_ccy": "USD",
+      "stmt_price": 861.0,
+      "stmt_value": 9471
+    },
+    {
+      "name": "Space Exploration Technologies -A- (SPCX)",
+      "isin": "US84615Q1031",
+      "symbol": "SPCX",
+      "class": "Equities",
+      "qty": 95,
+      "cost_usd": 109.795053,
+      "price_ccy": "USD",
+      "stmt_price": 138.74,
+      "stmt_value": 13180
     }
   ]
 }

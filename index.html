@@ -221,11 +221,12 @@ async function main() {
   const ret = total / meta.inception_value - 1;
   const dayChg = series.length > 1 ? series[iLast].v - series[iPrev].v : 0;
   const vsStmt = total - meta.statement_value;
+  const lastCp = meta.checkpoints[meta.checkpoints.length - 1];
   const tiles = [
     { k: "Net asset value", v: fmt$(total), d: `${cal[iLast] || "—"}` },
     { k: "Since inception", v: fmtP(ret * 100), d: `${fmt$(total - meta.inception_value)} vs ${fmt$(meta.inception_value)}`, c: sgn(ret) },
     { k: "Day change", v: fmt$(dayChg), d: fmtP(series.length > 1 ? (series[iLast].v / series[iPrev].v - 1) * 100 : 0), c: sgn(dayChg) },
-    { k: `Vs statement ${meta.statement_date}`, v: fmt$(vsStmt), d: `UBS: ${fmt$(meta.statement_value)} · TWR −2.18%`, c: sgn(vsStmt) },
+    { k: `Vs statement ${meta.statement_date}`, v: fmt$(vsStmt), d: `UBS: ${fmt$(meta.statement_value)} · TWR ${fmtP(lastCp.twr_cum)}`, c: sgn(vsStmt) },
   ];
   document.getElementById("tiles").innerHTML = tiles.map(t =>
     `<div class="tile"><div class="k">${t.k}</div><div class="v ${t.c || ""}">${t.v}</div><div class="d">${t.d}</div></div>`).join("");
@@ -376,7 +377,7 @@ function buildTable(rows, meta, total) {
   }
   render();
   document.getElementById("tablenote").textContent =
-    "Avg cost and quantities from the UBS statement (09 Jul 2026). P&L is unrealized, in USD, vs average cost. ● = price older than 4 days (fund NAVs lag).";
+    `Avg cost and quantities from the UBS statement (${meta.statement_date}). P&L is unrealized, in USD, vs average cost. ● = price older than 4 days (fund NAVs lag).`;
 }
 
 main().catch(e => {
