@@ -161,10 +161,14 @@ function showTip(html, x, y) {
 function hideTip() { tooltip.style.display = "none"; }
 
 async function main() {
+  // no-cache: revalida os dados no servidor a cada carga (304 quando nao mudou).
+  // Sem isso o HTML e os JSONs vencem em horas diferentes e da' estado misto —
+  // codigo novo lendo posicoes velhas, sem nenhum sinal de que esta' defasado.
+  const get = (u, opt) => fetch(u, { cache: "no-cache" }).then(r => opt && !r.ok ? null : r.json());
   const [book, prices, ledger] = await Promise.all([
-    fetch("positions.json").then(r => r.json()),
-    fetch("data/prices.json").then(r => r.json()),
-    fetch("ledger.json").then(r => r.ok ? r.json() : null).catch(() => null),
+    get("positions.json"),
+    get("data/prices.json"),
+    get("ledger.json", true).catch(() => null),
   ]);
   const meta = book.meta, S = prices.series;
 
