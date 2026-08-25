@@ -168,9 +168,14 @@ async function main() {
   ]);
   const meta = book.meta, S = prices.series;
 
-  // ---- master calendar (union of dates >= inception), forward-filled series
+  // ---- master calendar (union of dates >= inception), forward-filled series.
+  // Pares de cambio ficam fora do calendario: o forex abre domingo a noite e
+  // essas barras criavam dias de pregao que nao existem (o FX so' converte).
   const dateSet = new Set();
-  for (const sym in S) (S[sym].dates || []).forEach(d => { if (d >= meta.inception_date) dateSet.add(d); });
+  for (const sym in S) {
+    if (/USD=X$/.test(sym)) continue;
+    (S[sym].dates || []).forEach(d => { if (d >= meta.inception_date) dateSet.add(d); });
+  }
   const cal = [...dateSet].sort();
   const ff = {};   // sym -> array of closes aligned to cal (ffill, then backfill head)
   for (const sym in S) {

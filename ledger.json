@@ -1,10 +1,11 @@
 {
  "meta": {
-  "source": "UBS account transactions, portfolio 0240007670380003, 26.05.2026 - 07.08.2026",
+  "source": "UBS account transactions, portfolio 0240007670380003, 26.05.2026 - 24.08.2026",
   "basis": "value date (settlement) for both cash and holdings",
-  "transactions": 79,
-  "cash_final": 21882.18,
-  "note": "Cash balances are the running balances printed on the UBS statement, so dividends, interest and fees are included on the day they landed. Buys/sells are internal transfers between cash and securities and do not affect NAV; there are no external flows after inception besides USD 13.45 of e-banking transfers, treated as costs."
+  "transactions": 84,
+  "cash_final": 84812.89,
+  "note": "Cash balances are the running balances printed on the UBS statement, so dividends, interest and fees are included on the day they landed. Buys/sells are internal transfers between cash and securities and do not affect NAV; there are no external flows after inception besides USD 13.45 of e-banking transfers, treated as costs.",
+  "inferred": "The transactions export carries no share counts. Sales are full exits, so the quantity is the whole position from the 10.08 statement; the TLT buy of 220 is the only integer whose implied execution price (82.1455, net of the 0.65% UBS fee verified on six other trades) falls inside the 21.08 intraday range 81.90-82.27."
  },
  "cash": {
   "2026-05-26": 1000000.0,
@@ -36,7 +37,11 @@
   "2026-08-03": 31711.65,
   "2026-08-05": 41893.82,
   "2026-08-06": 42187.15,
-  "2026-08-07": 21882.18
+  "2026-08-07": 21882.18,
+  "2026-08-20": 32403.57,
+  "2026-08-21": 81785.77,
+  "2026-08-24": 63596.3,
+  "2026-08-25": 84812.89
  },
  "trades": {
   "2026-05-27": [
@@ -341,6 +346,39 @@
     "isin": "US84615Q1031",
     "qty": 95
    }
+  ],
+  "2026-08-20": [
+   {
+    "symbol": "KWEB",
+    "isin": "US5007673065",
+    "qty": -390
+   }
+  ],
+  "2026-08-21": [
+   {
+    "symbol": "BLTN.AS",
+    "isin": "DE000A2QP4D2",
+    "qty": -441
+   }
+  ],
+  "2026-08-24": [
+   {
+    "symbol": "TLT",
+    "isin": "US4642874329",
+    "qty": 220
+   }
+  ],
+  "2026-08-25": [
+   {
+    "symbol": "EWZ",
+    "isin": "US4642864007",
+    "qty": -272
+   },
+   {
+    "symbol": "GDX",
+    "isin": "US92189F1066",
+    "qty": -114
+   }
   ]
  },
  "closed": [
@@ -372,6 +410,30 @@
    "isin": "IE000YU9K6K2",
    "symbol": "JEDI.L",
    "name": "VanEck Space Innovators UCITS ETF",
+   "class": "Equities"
+  },
+  {
+   "isin": "US5007673065",
+   "symbol": "KWEB",
+   "name": "KraneShares CSI China Internet ETF",
+   "class": "Equities"
+  },
+  {
+   "isin": "DE000A2QP4D2",
+   "symbol": "BLTN.AS",
+   "name": "iShares Brazil LTN BRL Govt Bond UCITS USD Acc",
+   "class": "Bonds"
+  },
+  {
+   "isin": "US92189F1066",
+   "symbol": "GDX",
+   "name": "VanEck Gold Miners ETF",
+   "class": "Equities"
+  },
+  {
+   "isin": "US4642864007",
+   "symbol": "EWZ",
+   "name": "iShares MSCI Brazil ETF",
    "class": "Equities"
   }
  ]

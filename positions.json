@@ -11,7 +11,7 @@
     },
     "statement_date": "2026-08-10",
     "statement_value": 1000375.0,
-    "cash_usd": 21882.18,
+    "cash_usd": 84812.89,
     "checkpoints": [
       {
         "date": "2026-05-26",
@@ -123,22 +123,11 @@
       "isin": "US4642874329",
       "symbol": "TLT",
       "class": "Bonds",
-      "qty": 596,
-      "cost_usd": 83.952819,
+      "qty": 816,
+      "cost_usd": 83.465542,
       "price_ccy": "USD",
       "stmt_price": 82.06,
-      "stmt_value": 48908
-    },
-    {
-      "name": "iShares Brazil LTN BRL Govt Bond UCITS USD Acc",
-      "isin": "DE000A2QP4D2",
-      "symbol": "BLTN.AS",
-      "class": "Bonds",
-      "qty": 441,
-      "cost_usd": 113.255895,
-      "price_ccy": "USD",
-      "stmt_price": 114.16,
-      "stmt_value": 50345
+      "stmt_value": 66961
     },
     {
       "name": "Amundi Stoxx Europe 600 Banks Acc",
@@ -218,17 +207,6 @@
       "stmt_value": 10586
     },
     {
-      "name": "KraneShares CSI China Internet ETF",
-      "isin": "US5007673065",
-      "symbol": "KWEB",
-      "class": "Equities",
-      "qty": 390,
-      "cost_usd": 26.5,
-      "price_ccy": "USD",
-      "stmt_price": 29.11,
-      "stmt_value": 11353
-    },
-    {
       "name": "Energy Select Sector SPDR",
       "isin": "US81369Y5069",
       "symbol": "XLE",
@@ -306,17 +284,6 @@
       "stmt_value": 11189
     },
     {
-      "name": "iShares MSCI Brazil ETF",
-      "isin": "US4642864007",
-      "symbol": "EWZ",
-      "class": "Equities",
-      "qty": 272,
-      "cost_usd": 36.485,
-      "price_ccy": "USD",
-      "stmt_price": 35.19,
-      "stmt_value": 9572
-    },
-    {
       "name": "iShares MSCI Global Metals & Mining Producers ETF",
       "isin": "US46434G8481",
       "symbol": "PICK",
@@ -326,17 +293,6 @@
       "price_ccy": "USD",
       "stmt_price": 64.14,
       "stmt_value": 9749
-    },
-    {
-      "name": "VanEck Gold Miners ETF",
-      "isin": "US92189F1066",
-      "symbol": "GDX",
-      "class": "Equities",
-      "qty": 114,
-      "cost_usd": 87.14,
-      "price_ccy": "USD",
-      "stmt_price": 90.49,
-      "stmt_value": 10316
     },
     {
       "name": "VanEck Rare Earth & Strategic Metals ETF",
